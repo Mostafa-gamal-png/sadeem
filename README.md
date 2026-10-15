@@ -1,23 +1,150 @@
-# موقع شركة سديم للأمن والسلامة | Sadeem Company for Safety and Security
+# موقع شركة سديم للأمن والسلامة
 
-صفحة واحدة تعرض الحسابات البنكية الرسمية للشركة (مصرف الراجحي ومصرف الإنماء) مع زر نسخ لكل رقم آيبان ورقم حساب.
+موقع تعريفي بلغة عربية (RTL) لشركة سديم للأمن والسلامة في المملكة العربية السعودية: توريد وتركيب وصيانة أنظمة مكافحة الحريق والإنذار المبكر، معدات السلامة، الصيانة الدورية، ومخططات السلامة والتقارير الفنية.
 
-A single-page site showing the company's official bank details (Al Rajhi Bank and Alinma Bank) with one-tap copy buttons for every IBAN and account number.
+الموقع ثابت بالكامل (HTML + CSS + JavaScript) بلا أي خطوة بناء، ويمكن نقله إلى أي استضافة ثابتة كما هو.
 
-## الرابط المباشر | Live site
+## الروابط
 
-https://mostafa-gamal-png.github.io/sadeem/
+| الاستضافة | الرابط |
+|---|---|
+| GitHub Pages | https://mostafa-gamal-png.github.io/sadeem/ |
+| Vercel | يُنشر تلقائيًا من الفرع `main` ضمن مشروع Vercel المرتبط بالمستودع |
 
-## كيف يُنشر الموقع | How it deploys
+صفحة الحسابات البنكية القديمة ما زالت متاحة على المسار `bank.html`.
 
-- GitHub Pages يقدّم الموقع من الفرع `gh-pages`.
-- أي دفعة (push) إلى الفرع `main` تشغّل `.github/workflows/publish-pages.yml` الذي ينسخ الملفات إلى `gh-pages`، فيتحدّث الموقع خلال دقيقة تقريبًا.
+## هيكل الملفات
+
+```
+sadeem/
+├── index.html                 الصفحة الرئيسية (الهيكل والنصوص الثابتة)
+├── bank.html                  صفحة الحسابات البنكية للشركة
+├── css/style.css              كل الأنماط والألوان والاستجابة
+├── js/data.js                 ← بيانات الموقع كلها (عدّل هنا)
+├── js/main.js                 بناء الأقسام من البيانات، القائمة، عارض الصور، الواتساب
+├── assets/
+│   ├── logo/sadeem-logo.png   الشعار الأصلي
+│   ├── favicon.png            أيقونة الموقع
+│   ├── apple-touch-icon.png   أيقونة الأجهزة
+│   ├── og-image.png           صورة المشاركة في الشبكات الاجتماعية
+│   ├── img/hero/              صورة الشاشة الأولى
+│   ├── img/projects/          صور المشروعات
+│   ├── img/clients/           صور العملاء (+ thumbs/ للمصغّرات)
+│   ├── img/documents/         صور معاينة الوثائق
+│   ├── img/banks/             شعارات البنوك لصفحة الحسابات
+│   └── docs/                  بروفايل الشركة والتراخيص (PDF)
+├── tools/optimize-images.py   ضغط الصور وإنشاء المصغّرات
+└── .github/workflows/         النشر التلقائي على GitHub Pages
+```
+
+## التشغيل محليًا
+
+لا يحتاج الموقع إلى أي تثبيت. افتح `index.html` في المتصفح مباشرة، أو شغّل خادمًا محليًا بسيطًا من داخل المجلد:
+
+```bash
+python3 -m http.server 8080
+# ثم افتح http://localhost:8080
+```
+
+ملاحظة: زر النسخ في صفحة الحسابات البنكية ورابط الواتساب يعملان بشكل كامل عبر HTTPS أو localhost.
+
+## تعديل المحتوى
+
+كل المحتوى المتغيّر في ملف واحد: `js/data.js`.
+
+### بيانات الشركة والتواصل
+
+```js
+contact: {
+  phone: "+9665XXXXXXXX",     // يظهر كرابط اتصال
+  whatsapp: "9665XXXXXXXX",   // بالصيغة الدولية بدون + ولا مسافات
+  email: "info@example.com",
+  address: "الرياض - حي ...",
+  mapUrl: "",                 // رابط خرائط جوجل (اختياري)
+  mapEmbedUrl: "",            // رابط التضمين من خرائط جوجل (اختياري)
+  workingHours: ""
+}
+```
+
+- أي حقل فارغ يُخفى تلقائيًا من القسم والتذييل.
+- بدون رقم واتساب تتحوّل أزرار الطلبات إلى روابط تنقل لقسم التواصل، ويُخفى الزر الثابت.
+- نصوص رسائل الواتساب لكل نوع طلب في `whatsappMessages`. الكلمة `{service}` في رسالة الخدمة تُستبدل باسم الخدمة تلقائيًا.
+
+### بروفايل الشركة
+
+ضع الملف في `assets/docs/` ثم اكتب مساره في `company.profileFile`، مثل:
+
+```js
+profileFile: "assets/docs/sadeem-profile.pdf"
+```
+
+يظهر زر التحميل في الشاشة الأولى وقسم التواصل والتذييل بمجرد تعيين المسار.
+
+### الخدمات
+
+مصفوفة `services`. لكل خدمة `title` و`desc` و`icon` (القيم المتاحة: `flame`، `bell`، `helmet`، `wrench`، `file`، `camera`، `shield`). ضع `enabled: false` لإخفاء خدمة دون حذفها.
+
+### المشروعات والعملاء
+
+1. ضع الصور الأصلية في أي مجلد مؤقت، ثم شغّل أداة الضغط (تحتاج Python ومكتبة Pillow: `pip install pillow`):
+
+```bash
+python3 tools/optimize-images.py clients  "مسار/صورة1.jpg" "مسار/صورة2.jpg"
+python3 tools/optimize-images.py projects "مسار/صورة.jpg"
+python3 tools/optimize-images.py hero     "مسار/صورة-الشاشة-الأولى.jpg"
+```
+
+2. الأداة تحفظ النسخة الكبيرة (حتى 1600 بكسل) والمصغّرة (حتى 640 بكسل) داخل `assets/img/<المجموعة>/` دون قص، وتطبع مقطعًا جاهزًا للصق في `js/data.js`.
+3. أكمل الاسم ونوع المشروع ونطاق الأعمال من البروفايل فقط. لا تنسب صورة إلى منشأة غير معروفة.
+
+مثال عميل:
+
+```js
+{ name: "اسم المنشأة", image: "assets/img/clients/x.jpg", thumb: "assets/img/clients/thumbs/x.jpg", alt: "لافتة المنشأة" }
+```
+
+مثال مشروع:
+
+```js
+{ name: "اسم المنشأة", type: "مجمع تجاري", scope: ["نظام إنذار معنون", "شبكة مرشات"], image: "assets/img/projects/x.jpg", alt: "" }
+```
+
+شركاء النجاح في مصفوفة `partners` بنفس شكل العملاء.
+
+### التراخيص والوثائق
+
+ضع ملف الوثيقة (PDF أو صورة) في `assets/docs/` وصورة معاينتها في `assets/img/documents/`، ثم أضف:
+
+```js
+{ title: "السجل التجاري", file: "assets/docs/cr.pdf", preview: "assets/img/documents/cr.jpg", issued: "2024-01-01", expires: "2025-01-01", note: "" }
+```
+
+حالة الصلاحية (سارية / منتهية) تُحسب تلقائيًا من `expires` مقارنة بتاريخ اليوم، فلا تُكتب يدويًا.
+
+### الشاشة الأولى
+
+`hero.image` صورة فعلية لأعمال الشركة. ما دامت فارغة يُعرض الشعار داخل لوحة بدلًا من الصورة.
+
+## الرفع على الاستضافة
+
+### GitHub Pages (الوضع الحالي)
+
+- أي دفعة إلى الفرع `main` تشغّل `.github/workflows/publish-pages.yml` الذي ينسخ الملفات إلى الفرع `gh-pages`، ومنه يُقدَّم الموقع خلال دقيقة تقريبًا.
 - لا تعدّل الفرع `gh-pages` يدويًا؛ يُعاد إنشاؤه مع كل نشر.
-- GitHub Pages serves the `gh-pages` branch. Every push to `main` runs the publish workflow, which copies the site files there. No build step: the files are served as-is.
+- لربط نطاق خاص: Settings → Pages → Custom domain في GitHub، ثم حدّث `company.siteUrl` في `js/data.js` وروابط `og:url` و`canonical` في `index.html`.
 
-## التعديل | Editing
+### Vercel
 
-- المحتوى كله في `index.html` (النصوص والأرقام والتنسيق).
-- الصور: `Untitled-1.png` شعار الشركة، `39-4-1536x547.png` شعار الراجحي، `1332406-640644031.jpg` شعار الإنماء.
-- صورة الخلفية `8dee3b25-d332-4fff-af5c-9ace09dc79cc.jpg` غير موجودة في المستودع؛ إن أضفتها بنفس الاسم تظهر تلقائيًا، وإلا يُعرض تدرّج لوني بدلًا منها.
-- للمعاينة محليًا افتح `index.html` في المتصفح مباشرة.
+المستودع مرتبط بمشروع على Vercel يُنشر تلقائيًا من `main` دون أي إعداد إضافي.
+
+### أي استضافة ثابتة أخرى
+
+ارفع محتويات المجلد كاملًا (ما عدا `.git` و`.github` و`tools`) إلى جذر الاستضافة. كل المسارات نسبية فلا يلزم أي تعديل.
+
+## قائمة التحقق قبل النشر
+
+- [ ] بيانات التواصل مكتملة في `js/data.js` (هاتف، واتساب، بريد، عنوان).
+- [ ] ملف البروفايل في `assets/docs/` ومساره في `company.profileFile`.
+- [ ] صور العملاء الـ14 مضغوطة بالأداة وأسماء المنشآت صحيحة.
+- [ ] المشروعات والوثائق من البروفايل فقط، مع تواريخ الوثائق.
+- [ ] تحديث `siteUrl` و`og:url` و`canonical` عند اعتماد النطاق النهائي.
