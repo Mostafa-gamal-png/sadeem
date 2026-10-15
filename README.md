@@ -10,9 +10,10 @@ https://mostafa-gamal-png.github.io/sadeem/
 
 ## كيف يُنشر الموقع | How it deploys
 
-- الموقع ينشر تلقائيًا على GitHub Pages عبر `.github/workflows/deploy-pages.yml`.
-- أي دفعة (push) إلى الفرع `main` تعيد النشر خلال دقيقة تقريبًا.
-- Every push to `main` redeploys the site through GitHub Actions. No build step: the repo is served as-is.
+- GitHub Pages يقدّم الموقع من الفرع `gh-pages`.
+- أي دفعة (push) إلى الفرع `main` تشغّل `.github/workflows/publish-pages.yml` الذي ينسخ الملفات إلى `gh-pages`، فيتحدّث الموقع خلال دقيقة تقريبًا.
+- لا تعدّل الفرع `gh-pages` يدويًا؛ يُعاد إنشاؤه مع كل نشر.
+- GitHub Pages serves the `gh-pages` branch. Every push to `main` runs the publish workflow, which copies the site files there. No build step: the files are served as-is.
 
 ## التعديل | Editing
 
