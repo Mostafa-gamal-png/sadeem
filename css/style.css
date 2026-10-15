@@ -26,6 +26,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
 
 html {
   scroll-behavior: smooth;
@@ -103,7 +104,6 @@ section { scroll-margin-top: calc(var(--header-h) + 14px); }
 .btn--ghost:hover { border-color: var(--brand); color: var(--brand); }
 .btn--sm { padding: 9px 16px; font-size: 0.92rem; border-radius: 10px; }
 .btn--sm svg { width: 18px; height: 18px; }
-.btn[hidden] { display: none; }
 [data-icon] { display: inline-flex; line-height: 0; }
 
 /* ---------- الترويسة وشريط التنقل ---------- */
