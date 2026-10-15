@@ -1,0 +1,33 @@
+name: Publish to GitHub Pages
+
+# كل دفعة إلى main تنسخ ملفات الموقع إلى فرع gh-pages،
+# وهو الفرع الذي يقدّم GitHub Pages الموقع منه.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Collect site files
+        run: rsync -a --exclude .git --exclude .github --exclude site --exclude tools ./ site/
+
+      - name: Push to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
+          force_orphan: true
+          commit_message: "Publish ${{ github.sha }}"
