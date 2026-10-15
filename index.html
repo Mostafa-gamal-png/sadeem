@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الحسابات البنكية</title>
+    <title>الحسابات البنكية | شركة سديم للأمن والسلامة</title>
+    <meta name="description" content="الحسابات البنكية الرسمية لشركة سديم للأمن والسلامة - مصرف الراجحي ومصرف الإنماء. Official bank details of Sadeem Company for Safety and Security.">
+    <meta name="theme-color" content="#2D548F">
+    <link rel="icon" type="image/png" href="favicon.png">
     <style>
         * {
             margin: 0;
@@ -13,10 +16,13 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-image: url('8dee3b25-d332-4fff-af5c-9ace09dc79cc.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            /* الصورة أولًا، والتدرّج اللوني خلفها كبديل إذا لم تتوفر الصورة */
+            background-color: #2D548F;
+            background-image: url('8dee3b25-d332-4fff-af5c-9ace09dc79cc.jpg'),
+                              linear-gradient(135deg, #1e3a5f 0%, #2D548F 55%, #c94d22 100%);
+            background-size: cover, cover;
+            background-position: center, center;
+            background-attachment: fixed, fixed;
             min-height: 100vh;
             padding: 15px;
         }
@@ -308,13 +314,34 @@
     <script>
         function copyToClipboard(text, type) {
             const cleanText = text.replace(/\s/g, '');
-            
-            navigator.clipboard.writeText(cleanText).then(function() {
-                showNotification(`تم نسخ ${type} بنجاح ✓`);
-            }).catch(function(err) {
+            const done = () => showNotification(`تم نسخ ${type} بنجاح ✓`);
+            const fail = (err) => {
                 console.error('فشل النسخ: ', err);
                 showNotification('حدث خطأ في النسخ ❌');
-            });
+            };
+
+            // واجهة Clipboard تعمل فقط على HTTPS؛ وإلا نستخدم الطريقة القديمة
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(cleanText).then(done).catch(function(err) {
+                    legacyCopy(cleanText) ? done() : fail(err);
+                });
+            } else {
+                legacyCopy(cleanText) ? done() : fail('clipboard API unavailable');
+            }
+        }
+
+        function legacyCopy(text) {
+            const area = document.createElement('textarea');
+            area.value = text;
+            area.setAttribute('readonly', '');
+            area.style.position = 'fixed';
+            area.style.opacity = '0';
+            document.body.appendChild(area);
+            area.select();
+            let ok = false;
+            try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+            document.body.removeChild(area);
+            return ok;
         }
 
         function showNotification(message) {
@@ -330,4 +357,4 @@
         }
     </script>
 </body>
-</html>
+</html>
